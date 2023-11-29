@@ -13,12 +13,14 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
+import titan.ide.context.IdeContext;
 
 /**
  * .
@@ -45,7 +47,7 @@ public class TextEditor {
   private void doOpenProject(File directory) {
     DefaultMutableTreeNode root = new DefaultMutableTreeNode(directory);
     addChildrenTreeNode(root, directory);
-    JTree tree = new JTree(root); // 左边就是我们的文件树
+    JTree tree = new JTree(root);
 
     tree.addTreeSelectionListener(
         e -> {
@@ -83,6 +85,8 @@ public class TextEditor {
             }
           }
         });
+    JSplitPane contentPane = IdeContext.get().mainWindow.viewManager.contentPane;
+    contentPane.setDividerLocation(contentPane.getHeight() - 50);
     projectPane.setViewportView(tree);
   }
 

@@ -1,7 +1,6 @@
 package titan.ide.window;
 
 import java.io.File;
-import titan.ide.services.MainWindowService;
 
 /**
  * .
@@ -10,12 +9,10 @@ import titan.ide.services.MainWindowService;
  */
 public class MainWindow extends AbstractWindow {
 
-  MainWindowService mainWindowService;
-  MainWindowViewManager viewManager;
+  public MainWindowViewManager viewManager;
 
   public MainWindow(String title) {
     super(title);
-    mainWindowService = new MainWindowService();
     viewManager = new MainWindowViewManager(this);
 
     viewManager.init();

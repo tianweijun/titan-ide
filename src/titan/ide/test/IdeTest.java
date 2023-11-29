@@ -11,6 +11,7 @@ import titan.ide.logger.Logger;
 public class IdeTest {
   public static void main(String[] args) {
     new IdeApplication().run();
+    // Lock lock = new Lock(IdeTest.class);
     Logger.debug("IdeTest", "IdeTest end");
   }
 }

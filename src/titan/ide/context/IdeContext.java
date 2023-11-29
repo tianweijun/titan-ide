@@ -1,8 +1,12 @@
 package titan.ide.context;
 
 import titan.ide.config.IdeConfig;
+import titan.ide.config.IdeConfigBuilder;
 import titan.ide.config.ProjectIdeConfig;
+import titan.ide.config.RootIdeCfg;
+import titan.ide.config.RootIdeConfigBuilder;
 import titan.ide.window.MainWindow;
+import titan.json.Json;
 
 /**
  * context.
@@ -15,6 +19,8 @@ public class IdeContext {
 
   public ProjectIdeConfig projectIdeConfig;
 
+  public RootIdeCfg rootIdeCfg;
+
   public IdeConfig ideConfig;
 
   public MainWindow mainWindow;
@@ -25,6 +31,7 @@ public class IdeContext {
 
   public static void clear() {
     contextThreadLocal.remove();
+    Json.destruct();
   }
 
   public static IdeContext get() {
@@ -33,6 +40,8 @@ public class IdeContext {
 
   public static IdeContext init() {
     IdeContext ideContext = new IdeContext();
+    ideContext.rootIdeCfg = new RootIdeConfigBuilder().build();
+    ideContext.ideConfig = new IdeConfigBuilder().build(ideContext.rootIdeCfg);
     set(ideContext);
     return ideContext;
   }
