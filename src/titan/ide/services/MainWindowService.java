@@ -31,7 +31,7 @@ public class MainWindowService {
     if (StringUtils.isBlank(persistentIdeConfigFilePath)) {
       persistentIdeConfigFilePath = rootIdeCfg.getDefaultIdeConfigFilePath();
     }
-    IdeConfig ideConfig = ideContext.ideConfig.toPersistentObject();
+    IdeConfig ideConfig = ideContext.ideConfig;
     String ideConfigStrJson = Json.toPrettyJson(ideConfig);
     File persistentIdeConfigFile = FileUtil.makeFile(persistentIdeConfigFilePath);
     try (FileWriter fileWriter = new FileWriter(persistentIdeConfigFile)) {

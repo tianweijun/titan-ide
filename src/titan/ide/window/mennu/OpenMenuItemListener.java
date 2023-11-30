@@ -45,6 +45,10 @@ public class OpenMenuItemListener implements ActionListener {
         lastOpenedFile.isDirectory() ? lastOpenedFile : lastOpenedFile.getParentFile();
     try {
       strLastOpenedFileDirectory = lastOpenedFileDirectory.getCanonicalPath();
+      // windows file.getCanonicalPath() \\不转义
+      if (File.separatorChar == '\\') {
+        strLastOpenedFileDirectory = strLastOpenedFileDirectory.replace("\\", "\\\\");
+      }
     } catch (IOException e) {
       throw new IdeRuntimeException(e);
     }
@@ -55,7 +59,11 @@ public class OpenMenuItemListener implements ActionListener {
   private File getLastOpenedFileDirectory() {
     IdeConfig ideConfig = IdeContext.get().ideConfig;
     if (StringUtils.isNotBlank(ideConfig.lastOpenedFileDirectory)) {
-      File lastOpenedFileDirectory = new File(ideConfig.lastOpenedFileDirectory);
+      String filePath = ideConfig.lastOpenedFileDirectory;
+      if (File.separatorChar == '\\') {
+        filePath = filePath.replace("\\\\", "\\");
+      }
+      File lastOpenedFileDirectory = new File(filePath);
       if (lastOpenedFileDirectory.exists()) {
         return lastOpenedFileDirectory;
       }
