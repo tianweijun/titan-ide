@@ -1,5 +1,7 @@
 package titan.ide.config;
 
+import titan.ide.utli.StringUtils;
+
 /**
  * .
  *
@@ -7,4 +9,10 @@ package titan.ide.config;
  */
 public class IdeConfig {
   public String lastOpenedFileDirectory;
+
+  public void beOverrode(IdeConfig ideConfigInFile) {
+    if (StringUtils.isNotBlank(ideConfigInFile.lastOpenedFileDirectory)) {
+      this.lastOpenedFileDirectory = ideConfigInFile.lastOpenedFileDirectory;
+    }
+  }
 }

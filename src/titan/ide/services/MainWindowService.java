@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import titan.ide.config.IdeConfig;
-import titan.ide.config.RootIdeCfg;
+import titan.ide.config.RootIdeConfig;
 import titan.ide.context.IdeContext;
 import titan.ide.exception.IdeRuntimeException;
 import titan.ide.utli.FileUtil;
@@ -25,11 +25,11 @@ public class MainWindowService {
 
   public void persistIdeConfig() {
     IdeContext ideContext = IdeContext.get();
-    RootIdeCfg rootIdeCfg = ideContext.rootIdeCfg;
+    RootIdeConfig rootIdeConfig = ideContext.rootIdeConfig;
 
-    String persistentIdeConfigFilePath = rootIdeCfg.ideConfigFilePath;
+    String persistentIdeConfigFilePath = rootIdeConfig.ideConfigFilePath;
     if (StringUtils.isBlank(persistentIdeConfigFilePath)) {
-      persistentIdeConfigFilePath = rootIdeCfg.getDefaultIdeConfigFilePath();
+      persistentIdeConfigFilePath = rootIdeConfig.getDefaultIdeConfigFilePath();
     }
     IdeConfig ideConfig = ideContext.ideConfig;
     String ideConfigStrJson = Json.toPrettyJson(ideConfig);

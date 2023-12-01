@@ -24,7 +24,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
 import titan.ide.services.MainWindowService;
 import titan.ide.window.mennu.MenuActionListener;
 import titan.ide.window.view.TextEditor;
@@ -41,13 +40,17 @@ public class MainWindowViewManager {
 
   public JMenuBar menuBar;
   public JPanel topToolBar;
-  public JPanel topToolBarInRight;
+  public JPanel jpanelInTopToolBarLeft;
+  public JPanel jpanelInTopToolBarRight;
   public JSplitPane contentPane;
   public JSplitPane workspacePane;
   public JScrollPane projectPane;
   public TextEditor textEditor;
   public JScrollPane bottomToolBarScrollPane;
   public JTabbedPane bottomToolBar;
+  public JPanel statusBar;
+  public JPanel jpanelInStatusBarLeft;
+  public JPanel jpanelInStatusBarRight;
 
   MenuActionListener menuActionListener;
 
@@ -77,16 +80,40 @@ public class MainWindowViewManager {
 
     mainWindow.add(initTopToolBar(), BorderLayout.NORTH);
     mainWindow.add(initContentPane(), BorderLayout.CENTER);
+    mainWindow.add(initStatusBar(), BorderLayout.SOUTH);
+  }
+
+  private JPanel initStatusBar() {
+    statusBar = new JPanel(new BorderLayout());
+    statusBar.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
+    jpanelInStatusBarLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    jpanelInStatusBarRight = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    statusBar.add(jpanelInStatusBarLeft, BorderLayout.WEST);
+    statusBar.add(jpanelInStatusBarRight, BorderLayout.EAST);
+
+    addMsgToLeftStatusBar("All files are up-to-date (moments ago)");
+    addMsgToRightStatusBar("UTF-8");
+    return statusBar;
+  }
+
+  private void addMsgToRightStatusBar(String msg) {
+    JLabel msgLabel = new JLabel(msg);
+    msgLabel.setForeground(Color.BLUE);
+    jpanelInStatusBarRight.add(msgLabel);
+  }
+
+  private void addMsgToLeftStatusBar(String msg) {
+    JLabel msgLabel = new JLabel(msg);
+    jpanelInStatusBarLeft.add(msgLabel);
   }
 
   private JPanel initTopToolBar() {
     topToolBar = new JPanel(new BorderLayout());
-    Border lineBorder = BorderFactory.createMatteBorder(1, 0, 1, 0, Color.GRAY);
-    topToolBar.setBorder(lineBorder);
-    JPanel leftJPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    topToolBarInRight = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-    topToolBar.add(leftJPanel, BorderLayout.WEST);
-    topToolBar.add(topToolBarInRight, BorderLayout.EAST);
+    topToolBar.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.GRAY));
+    jpanelInTopToolBarLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    jpanelInTopToolBarRight = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    topToolBar.add(jpanelInTopToolBarLeft, BorderLayout.WEST);
+    topToolBar.add(jpanelInTopToolBarRight, BorderLayout.EAST);
 
     addRunBtnInTopToolBar();
     addDebugBtnInTopToolBar();
@@ -107,7 +134,7 @@ public class MainWindowViewManager {
             addDebugInBottomToolBar();
           }
         });
-    topToolBarInRight.add(debugBtn);
+    jpanelInTopToolBarRight.add(debugBtn);
   }
 
   private void addRunBtnInTopToolBar() {
@@ -123,7 +150,7 @@ public class MainWindowViewManager {
             addRunInBottomToolBar();
           }
         });
-    topToolBarInRight.add(runBtn);
+    jpanelInTopToolBarRight.add(runBtn);
   }
 
   private void addDebugInBottomToolBar() {

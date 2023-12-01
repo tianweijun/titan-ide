@@ -10,10 +10,10 @@ import titan.json.Json;
  */
 public class RootIdeConfigBuilder {
 
-  public RootIdeCfg build() {
+  public RootIdeConfig build() {
     InputStream jsonIdeConfigInputStream =
-        this.getClass().getClassLoader().getResourceAsStream("config/rootIdeCfg.json");
-    RootIdeCfg rootIdeConfig = Json.fromJson(jsonIdeConfigInputStream, RootIdeCfg.class);
+        this.getClass().getClassLoader().getResourceAsStream("config/rootIdeConfig.json");
+    RootIdeConfig rootIdeConfig = Json.fromJson(jsonIdeConfigInputStream, RootIdeConfig.class);
     return rootIdeConfig;
   }
 }

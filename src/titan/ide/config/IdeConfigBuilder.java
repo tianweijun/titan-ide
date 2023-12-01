@@ -3,6 +3,7 @@ package titan.ide.config;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import titan.ide.exception.IdeRuntimeException;
 import titan.ide.utli.StringUtils;
 import titan.json.Json;
@@ -14,27 +15,31 @@ import titan.json.Json;
  */
 public class IdeConfigBuilder {
 
-  public IdeConfig build(RootIdeCfg rootIdeCfg) {
-    if (StringUtils.isNotBlank(rootIdeCfg.ideConfigFilePath)) {
-      return buildByFilePath(rootIdeCfg.ideConfigFilePath);
+  public IdeConfig build(RootIdeConfig rootIdeConfig) {
+    if (StringUtils.isNotBlank(rootIdeConfig.ideConfigFilePath)) {
+      return buildByFilePath(rootIdeConfig.ideConfigFilePath);
     } else {
-      return buildByFilePath(rootIdeCfg.getDefaultIdeConfigFilePath());
+      return buildByFilePath(rootIdeConfig.getDefaultIdeConfigFilePath());
     }
   }
 
+  private IdeConfig build() {
+    InputStream jsonIdeConfigInputStream =
+        this.getClass().getClassLoader().getResourceAsStream("config/defaultIdeConfig.json");
+    return Json.fromJson(jsonIdeConfigInputStream, IdeConfig.class);
+  }
+
   private IdeConfig buildByFilePath(String ideConfigFilePath) {
+    IdeConfig ideConfig = build();
     File cfgFile = new File(ideConfigFilePath);
     if (cfgFile.exists() && cfgFile.isFile()) {
-      try (FileInputStream jsonIdeConfigInputStream = new FileInputStream(ideConfigFilePath)) {
-        return Json.fromJson(jsonIdeConfigInputStream, IdeConfig.class);
+      try (FileInputStream ideConfigInFileJsonInputStream = new FileInputStream(cfgFile)) {
+        IdeConfig ideConfigInFile = Json.fromJson(ideConfigInFileJsonInputStream, IdeConfig.class);
+        ideConfig.beOverrode(ideConfigInFile);
       } catch (IOException e) {
         throw new IdeRuntimeException(e);
       }
     }
-    return build();
-  }
-
-  private IdeConfig build() {
-    return new IdeConfig();
+    return ideConfig;
   }
 }
