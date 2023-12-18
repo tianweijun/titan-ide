@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -126,7 +125,7 @@ public class MainWindowViewManager {
     ImageIcon debugBtnIcon = new ImageIcon(debugBtnImgResource);
     JButton debugBtn = new JButton(debugBtnIcon);
     debugBtn.setBorderPainted(false);
-    debugBtn.setContentAreaFilled(false);
+    debugBtn.setContentAreaFilled(true);
     debugBtn.addActionListener(
         new ActionListener() {
           @Override
@@ -142,7 +141,7 @@ public class MainWindowViewManager {
     ImageIcon runBtnIcon = new ImageIcon(runBtnImgResource);
     JButton runBtn = new JButton(runBtnIcon);
     runBtn.setBorderPainted(false);
-    runBtn.setContentAreaFilled(false);
+    runBtn.setContentAreaFilled(true);
     runBtn.addActionListener(
         new ActionListener() {
           @Override
@@ -156,40 +155,28 @@ public class MainWindowViewManager {
   private void addDebugInBottomToolBar() {
     JLabel debugLabel = new JLabel("debug");
     bottomToolBar.addTab("debug", debugLabel);
-    int contentPaneHeight = contentPane.getHeight();
-    Insets bottomToolBarInsets = bottomToolBar.getInsets();
-    int bottomToolBarHeight =
-        bottomToolBarInsets.top + bottomToolBar.getHeight() + bottomToolBarInsets.bottom;
-    Insets bottomToolBarScrollPaneInsets = bottomToolBarScrollPane.getInsets();
-    int bottomToolBarScrollPaneHeight =
-        bottomToolBarScrollPaneInsets.top
-            + bottomToolBarScrollPane.getHeight()
-            + bottomToolBarScrollPaneInsets.bottom;
-    int bottomToolBarWindowHeight = bottomToolBarScrollPaneHeight + bottomToolBarHeight;
-    contentPane.setDividerLocation(contentPaneHeight - bottomToolBarWindowHeight);
+    contentPane.setDividerLocation(
+        contentPane.getHeight()
+            - contentPane.getDividerSize()
+            - bottomToolBarScrollPane.getInsets().top
+            - 200);
   }
 
   private void addRunInBottomToolBar() {
     JLabel runLabel = new JLabel("run");
     bottomToolBar.addTab("run", runLabel);
-    int contentPaneHeight = contentPane.getHeight();
-    Insets bottomToolBarInsets = bottomToolBar.getInsets();
-    int bottomToolBarHeight =
-        bottomToolBarInsets.top + bottomToolBar.getHeight() + bottomToolBarInsets.bottom;
-    Insets bottomToolBarScrollPaneInsets = bottomToolBarScrollPane.getInsets();
-    int bottomToolBarScrollPaneHeight =
-        bottomToolBarScrollPaneInsets.top
-            + bottomToolBarScrollPane.getHeight()
-            + bottomToolBarScrollPaneInsets.bottom;
-    int bottomToolBarWindowHeight = bottomToolBarScrollPaneHeight + bottomToolBarHeight;
-    contentPane.setDividerLocation(contentPaneHeight - bottomToolBarWindowHeight);
+    contentPane.setDividerLocation(
+        contentPane.getHeight()
+            - contentPane.getDividerSize()
+            - bottomToolBarScrollPane.getInsets().top
+            - 200);
   }
 
   private JSplitPane initContentPane() {
     contentPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
     contentPane.setLeftComponent(initWorkspaceContainer());
     contentPane.setRightComponent(initBottomToolBar());
-    contentPane.setResizeWeight(0.96);
+    contentPane.setResizeWeight(1.0);
     return contentPane;
   }
 
@@ -198,7 +185,7 @@ public class MainWindowViewManager {
     bottomToolBarScrollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.GRAY));
 
     bottomToolBar = new JTabbedPane(SwingConstants.TOP);
-    bottomToolBar.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+    bottomToolBar.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
 
     bottomToolBarScrollPane.setViewportView(bottomToolBar);
     return bottomToolBarScrollPane;

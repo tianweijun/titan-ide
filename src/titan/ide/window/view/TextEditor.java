@@ -13,14 +13,13 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
-import titan.ide.context.IdeContext;
+import titan.ide.utli.FileUtil;
 
 /**
  * .
@@ -85,8 +84,6 @@ public class TextEditor {
             }
           }
         });
-    JSplitPane contentPane = IdeContext.get().mainWindow.viewManager.contentPane;
-    contentPane.setDividerLocation(contentPane.getHeight() - 50);
     projectPane.setViewportView(tree);
   }
 
@@ -110,6 +107,17 @@ public class TextEditor {
       return;
     }
     JTextPane jTextPane = new JTextPane();
+    jTextPane.setBorder(new LineNumberBorder());
+    jTextPane.addMouseListener(
+        new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+            // System.out.println("x:" + x + ",y:" + y);
+          }
+        });
+
     jTextPane.setText(FileUtil.getString(file));
     JScrollPane jScrollPane = new JScrollPane(jTextPane);
     textEditorPane.add(jScrollPane);
