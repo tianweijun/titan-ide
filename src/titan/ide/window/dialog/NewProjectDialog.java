@@ -9,11 +9,15 @@ import java.awt.event.ActionListener;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.InputVerifier;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import titan.ide.util.StringUtils;
 
 /**
  * .
@@ -73,12 +77,35 @@ public class NewProjectDialog extends JDialog {
     finishBtn.addActionListener(
         new ActionListener() {
           @Override
-          public void actionPerformed(ActionEvent e) {}
+          public void actionPerformed(ActionEvent e) {
+            NewProjectInputVerifier newProjectInputVerifier = new NewProjectInputVerifier();
+            boolean valid =
+                newProjectInputVerifier.verify(projectNameTextField)
+                    && newProjectInputVerifier.verify(projectLocationTextField);
+            if (!valid) {
+              JOptionPane.showMessageDialog(
+                  self,
+                  "field is invalid.Please correct it.\n",
+                  "Invalid Input",
+                  JOptionPane.ERROR_MESSAGE);
+            } else {
+              self.dispose();
+            }
+          }
         });
     return btnsPanel;
   }
 
   private JPanel createProjectInfoPanel() {
+    /*
+    projectNameTextField.setName(projectNameLabel.getText());
+    projectLocationTextField.setName(projectLocationLabel.getText());
+    NewProjectInputVerifier newProjectInputVerifier = new NewProjectInputVerifier();
+    projectNameTextField.setInputVerifier(newProjectInputVerifier);
+    projectLocationTextField.setInputVerifier(newProjectInputVerifier);
+    finishBtn.setVerifyInputWhenFocusTarget(true);
+    cancelBtn.setVerifyInputWhenFocusTarget(false);*/
+
     JPanel projectInfoPanel = new JPanel();
     GroupLayout layout = new GroupLayout(projectInfoPanel);
     projectInfoPanel.setLayout(layout);
@@ -111,5 +138,19 @@ public class NewProjectDialog extends JDialog {
                     .addComponent(projectLocationLabel)
                     .addComponent(projectLocationTextField)));
     return projectInfoPanel;
+  }
+
+  static class NewProjectInputVerifier extends InputVerifier {
+
+    @Override
+    public boolean verify(JComponent input) {
+      JTextField textField = (JTextField) input;
+      boolean valid = true;
+      String text = textField.getText();
+      if (StringUtils.isBlank(text)) {
+        valid = false;
+      }
+      return valid;
+    }
   }
 }

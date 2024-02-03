@@ -1,6 +1,6 @@
 package titan.ide.config;
 
-import titan.ide.utli.StringUtils;
+import titan.ide.util.StringUtils;
 
 /**
  * .

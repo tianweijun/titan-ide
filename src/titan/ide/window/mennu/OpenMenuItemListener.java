@@ -8,7 +8,7 @@ import javax.swing.JFileChooser;
 import titan.ide.config.IdeConfig;
 import titan.ide.context.IdeContext;
 import titan.ide.exception.IdeRuntimeException;
-import titan.ide.utli.StringUtils;
+import titan.ide.util.StringUtils;
 import titan.ide.window.MainWindow;
 
 /**

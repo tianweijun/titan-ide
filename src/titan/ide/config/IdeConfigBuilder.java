@@ -5,7 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import titan.ide.exception.IdeRuntimeException;
-import titan.ide.utli.StringUtils;
+import titan.ide.util.StringUtils;
 import titan.json.Json;
 
 /**

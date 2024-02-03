@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -25,7 +26,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 import titan.ide.services.MainWindowService;
 import titan.ide.window.mennu.MenuActionListener;
-import titan.ide.window.view.TextEditor;
+import titan.ide.window.text.TextEditor;
 
 /**
  * .
@@ -45,7 +46,7 @@ public class MainWindowViewManager {
   public JSplitPane workspacePane;
   public JScrollPane projectPane;
   public TextEditor textEditor;
-  public JScrollPane bottomToolBarScrollPane;
+  public JPanel bottomToolBarPane;
   public JTabbedPane bottomToolBar;
   public JPanel statusBar;
   public JPanel jpanelInStatusBarLeft;
@@ -67,6 +68,7 @@ public class MainWindowViewManager {
         new java.awt.event.WindowAdapter() {
           @Override
           public void windowClosing(java.awt.event.WindowEvent evt) {
+            mainWindow.actionOnWindowClosing();
             mainWindowService.actionOnWindowClosing();
             mainWindow.dispose();
           }
@@ -78,8 +80,8 @@ public class MainWindowViewManager {
     mainWindow.setJMenuBar(this.initMenu());
 
     mainWindow.add(initTopToolBar(), BorderLayout.NORTH);
-    mainWindow.add(initContentPane(), BorderLayout.CENTER);
     mainWindow.add(initStatusBar(), BorderLayout.SOUTH);
+    mainWindow.add(initContentPane(), BorderLayout.CENTER);
   }
 
   private JPanel initStatusBar() {
@@ -155,21 +157,13 @@ public class MainWindowViewManager {
   private void addDebugInBottomToolBar() {
     JLabel debugLabel = new JLabel("debug");
     bottomToolBar.addTab("debug", debugLabel);
-    contentPane.setDividerLocation(
-        contentPane.getHeight()
-            - contentPane.getDividerSize()
-            - bottomToolBarScrollPane.getInsets().top
-            - 200);
+    contentPane.setDividerLocation(contentPane.getHeight() - contentPane.getDividerSize() - 200);
   }
 
   private void addRunInBottomToolBar() {
     JLabel runLabel = new JLabel("run");
     bottomToolBar.addTab("run", runLabel);
-    contentPane.setDividerLocation(
-        contentPane.getHeight()
-            - contentPane.getDividerSize()
-            - bottomToolBarScrollPane.getInsets().top
-            - 200);
+    contentPane.setDividerLocation(contentPane.getHeight() - contentPane.getDividerSize() - 200);
   }
 
   private JSplitPane initContentPane() {
@@ -180,15 +174,18 @@ public class MainWindowViewManager {
     return contentPane;
   }
 
-  private JScrollPane initBottomToolBar() {
-    bottomToolBarScrollPane = new JScrollPane();
-    bottomToolBarScrollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.GRAY));
+  private JPanel initBottomToolBar() {
+    JScrollPane bottomToolBarScollPane = new JScrollPane();
+    bottomToolBarScollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.GRAY));
 
     bottomToolBar = new JTabbedPane(SwingConstants.TOP);
     bottomToolBar.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
 
-    bottomToolBarScrollPane.setViewportView(bottomToolBar);
-    return bottomToolBarScrollPane;
+    bottomToolBarScollPane.setViewportView(bottomToolBar);
+
+    JPanel bottomToolBarPane = new JPanel(new GridLayout(1, 1));
+    bottomToolBarPane.add(bottomToolBarScollPane);
+    return bottomToolBarPane;
   }
 
   private void setLogoIcon() {
@@ -250,10 +247,14 @@ public class MainWindowViewManager {
 
   private JTabbedPane initTextEditorContainer() {
     textEditor = new TextEditor(projectPane);
-    return textEditor.textEditorPane;
+    return textEditor.textEditorTabbedPane;
   }
 
   public void open(File file) {
     textEditor.open(file);
+  }
+
+  public void actionOnWindowClosing() {
+    textEditor.actionOnWindowClosing();
   }
 }

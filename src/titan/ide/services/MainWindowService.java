@@ -1,14 +1,11 @@
 package titan.ide.services;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import titan.ide.config.IdeConfig;
 import titan.ide.config.RootIdeConfig;
 import titan.ide.context.IdeContext;
-import titan.ide.exception.IdeRuntimeException;
-import titan.ide.utli.FileUtil;
-import titan.ide.utli.StringUtils;
+import titan.ide.util.FileUtil;
+import titan.ide.util.StringUtils;
 import titan.json.Json;
 
 /**
@@ -34,10 +31,6 @@ public class MainWindowService {
     IdeConfig ideConfig = ideContext.ideConfig;
     String ideConfigStrJson = Json.toPrettyJson(ideConfig);
     File persistentIdeConfigFile = FileUtil.makeFile(persistentIdeConfigFilePath);
-    try (FileWriter fileWriter = new FileWriter(persistentIdeConfigFile)) {
-      fileWriter.write(ideConfigStrJson);
-    } catch (IOException e) {
-      throw new IdeRuntimeException(e);
-    }
+    FileUtil.write(persistentIdeConfigFile, ideConfigStrJson);
   }
 }

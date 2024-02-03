@@ -1,4 +1,4 @@
-package titan.ide.utli;
+package titan.ide.util;
 
 /**
  * StringUtils.

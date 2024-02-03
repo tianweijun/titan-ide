@@ -1,4 +1,4 @@
-package titan.ide.window.view;
+package titan.ide.window.text;
 
 /**
  * .
