@@ -1,13 +1,17 @@
 package titan.ide.window.text;
 
+import com.formdev.flatlaf.ui.FlatTreeUI;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.Optional;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -17,8 +21,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
 import titan.ide.util.FileUtil;
 
@@ -47,8 +51,19 @@ public class TextEditor {
   private void doOpenProject(File directory) {
     DefaultMutableTreeNode root = new DefaultMutableTreeNode(new TreeNodeFileWrapper(directory));
     addChildrenTreeNode(root, directory);
-    JTree tree = new JTree(root);
 
+    JTree tree = new JTree(root);
+    tree.setFont(new Font(null, Font.PLAIN, 16));
+    tree.setRowHeight(24);
+    FlatTreeUI treeUi = (FlatTreeUI) tree.getUI();
+    treeUi.setCollapsedIcon(new ImageIcon(this.getClass().getResource("/img/triangle-right.png")));
+    treeUi.setExpandedIcon(new ImageIcon(this.getClass().getResource("/img/triangle-down.png")));
+
+    DefaultTreeCellRenderer cellRenderer = (DefaultTreeCellRenderer) tree.getCellRenderer();
+    cellRenderer.setLeafIcon(new ImageIcon(this.getClass().getResource("/img/file.png")));
+    cellRenderer.setOpenIcon(new ImageIcon(this.getClass().getResource("/img/folder.png")));
+    cellRenderer.setClosedIcon(new ImageIcon(this.getClass().getResource("/img/folder.png")));
+    /*
     tree.addTreeSelectionListener(
         e -> {
           DefaultMutableTreeNode lastPathComponent =
@@ -57,27 +72,43 @@ public class TextEditor {
           if (selectedFile.isFile()) {
             doOpenFile(selectedFile);
           }
-        });
+        });*/
 
     tree.addMouseListener(
         new MouseAdapter() {
           @Override
           public void mouseClicked(MouseEvent e) {
-            if (SwingUtilities.isLeftMouseButton(e)) {
-              TreePath path = tree.getPathForLocation(e.getX(), e.getY());
-              if (null == path) {
-                return;
-              }
-              DefaultMutableTreeNode lastPathComponent =
-                  (DefaultMutableTreeNode) path.getLastPathComponent();
-              File selectedFile = ((TreeNodeFileWrapper) lastPathComponent.getUserObject()).file;
+            // 左键双击和右键单击
+            TreePath path = tree.getClosestPathForLocation(e.getX(), e.getY());
+            DefaultMutableTreeNode lastPathComponent =
+                (DefaultMutableTreeNode) path.getLastPathComponent();
+            File selectedFile = ((TreeNodeFileWrapper) lastPathComponent.getUserObject()).file;
+            if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
               if (selectedFile.isFile()) {
                 doOpenFile(selectedFile);
               }
+            } else if (SwingUtilities.isRightMouseButton(e) && e.getClickCount() == 1) {
+              new FileJPopupMenu(selectedFile).show(e.getComponent(), e.getX(), e.getY());
             }
           }
         });
-    projectPane.setViewportView(tree);
+
+    JPanel panel = new JPanel(new GridBagLayout());
+    panel.setBackground(tree.getBackground());
+
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.BOTH;
+    gbc.weightx = 1.0;
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    panel.add(tree, gbc);
+    gbc.gridx = 0;
+    gbc.gridy = 1;
+    gbc.weighty = 1.0;
+    JLabel blankSpaceFillComponent = new JLabel(" ");
+    blankSpaceFillComponent.setBackground(tree.getBackground());
+    panel.add(blankSpaceFillComponent, gbc);
+    projectPane.setViewportView(panel);
   }
 
   private void addChildrenTreeNode(DefaultMutableTreeNode node, File file) {
@@ -87,9 +118,9 @@ public class TextEditor {
     File directory = file;
     File[] files = Optional.ofNullable(directory.listFiles()).orElseGet(() -> new File[0]);
     for (File f : files) {
-      DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(new TreeNodeFileWrapper(f));
-      node.add(newNode);
-      addChildrenTreeNode(newNode, f);
+      DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(new TreeNodeFileWrapper(f));
+      node.add(childNode);
+      addChildrenTreeNode(childNode, f);
     }
   }
 
@@ -113,24 +144,24 @@ public class TextEditor {
     textEditorTabbedPane.setSelectedIndex(indexInTabbedPane);
 
     SimpleAttributeSet attributeSet = new SimpleAttributeSet();
-    StyleConstants.setBold(attributeSet, true);
+    // StyleConstants.setBold(attributeSet, true);
     jTextPane.insertString(FileUtil.getString(file), attributeSet);
   }
 
   private JPanel getClosingTitleTab(String tabName, File file) {
-    JLabel title = new JLabel(tabName);
-
-    URL resource = this.getClass().getResource("/img/closing.png");
-    ImageIcon closingBtnIcon = new ImageIcon(resource);
+    ImageIcon closingBtnIcon = new ImageIcon(this.getClass().getResource("/img/closing.png"));
     JButton closingBtn = new JButton(closingBtnIcon);
     closingBtn.setBorderPainted(false);
     closingBtn.setContentAreaFilled(false);
     closingBtn.addActionListener(new ClosingTitleTabActionListener(this, file));
 
-    JPanel pane = new JPanel();
-    pane.add(title);
-    pane.add(closingBtn);
-    return pane;
+    JPanel panel = new JPanel();
+    panel.setBorder(BorderFactory.createEmptyBorder()); // 取消边框
+    panel.setOpaque(false); // 取消内边距
+
+    panel.add(new JLabel(tabName));
+    panel.add(closingBtn);
+    return panel;
   }
 
   public void saveTextToFile(File file) {

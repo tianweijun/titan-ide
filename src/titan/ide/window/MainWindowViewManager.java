@@ -46,7 +46,6 @@ public class MainWindowViewManager {
   public JSplitPane workspacePane;
   public JScrollPane projectPane;
   public TextEditor textEditor;
-  public JPanel bottomToolBarPane;
   public JTabbedPane bottomToolBar;
   public JPanel statusBar;
   public JPanel jpanelInStatusBarLeft;

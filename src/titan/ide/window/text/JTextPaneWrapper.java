@@ -27,7 +27,7 @@ public class JTextPaneWrapper extends JTextPane {
   public JTextPaneWrapper(TextEditor textEditor, File file) {
     super();
     this.file = file;
-    setFont(new Font(null, Font.PLAIN, 24));
+    setFont(new Font(null, Font.PLAIN, 20));
     setBackground(new Color(0xC7EDCC));
 
     setBorder(new LineNumberBorder());

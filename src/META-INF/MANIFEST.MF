@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
 Main-Class: titan.ide.IdeApplication
+Class-Path: titan-ast-runtime.jar titan-json.jar flatlaf-3.2.5.jar
 
