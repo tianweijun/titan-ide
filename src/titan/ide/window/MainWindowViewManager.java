@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -14,6 +13,7 @@ import java.net.URL;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -23,10 +23,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
 import titan.ide.services.MainWindowService;
 import titan.ide.window.mennu.MenuActionListener;
 import titan.ide.window.text.TextEditor;
+import titan.ide.window.toolbar.bottom.BottomToolBar;
+import titan.ide.window.toolbar.bottom.BottomToolBar.BottomToolBarItemType;
 
 /**
  * .
@@ -42,11 +43,12 @@ public class MainWindowViewManager {
   public JPanel topToolBar;
   public JPanel jpanelInTopToolBarLeft;
   public JPanel jpanelInTopToolBarRight;
-  public JSplitPane contentPane;
+  public JSplitPane contentVerticalSplitPane;
   public JSplitPane workspacePane;
+  public JPanel bottomToolBarItemContenPanel;
   public JScrollPane projectPane;
   public TextEditor textEditor;
-  public JTabbedPane bottomToolBar;
+  public BottomToolBar bottomToolBar;
   public JPanel statusBar;
   public JPanel jpanelInStatusBarLeft;
   public JPanel jpanelInStatusBarRight;
@@ -131,7 +133,7 @@ public class MainWindowViewManager {
         new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent e) {
-            addDebugInBottomToolBar();
+            bottomToolBar.openBarItem(BottomToolBarItemType.DEBUG);
           }
         });
     jpanelInTopToolBarRight.add(debugBtn);
@@ -147,44 +149,34 @@ public class MainWindowViewManager {
         new ActionListener() {
           @Override
           public void actionPerformed(ActionEvent e) {
-            addRunInBottomToolBar();
+            bottomToolBar.openBarItem(BottomToolBarItemType.RUN);
           }
         });
     jpanelInTopToolBarRight.add(runBtn);
   }
 
-  private void addDebugInBottomToolBar() {
-    JLabel debugLabel = new JLabel("debug");
-    bottomToolBar.addTab("debug", debugLabel);
-    contentPane.setDividerLocation(contentPane.getHeight() - contentPane.getDividerSize() - 200);
-  }
+  private JPanel initContentPane() {
+    bottomToolBarItemContenPanel = new JPanel();
+    bottomToolBarItemContenPanel.setOpaque(false);
+    // bottomToolBarItemContenPanel.setBackground(Color.green);
 
-  private void addRunInBottomToolBar() {
-    JLabel runLabel = new JLabel("run");
-    bottomToolBar.addTab("run", runLabel);
-    contentPane.setDividerLocation(contentPane.getHeight() - contentPane.getDividerSize() - 200);
-  }
+    contentVerticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+    contentVerticalSplitPane.setTopComponent(initWorkspaceContainer());
+    // contentVerticalSplitPane.setBottomComponent(bottomToolBarItemContenPanel);
+    contentVerticalSplitPane.setResizeWeight(1.0);
+    contentVerticalSplitPane.setDividerSize(0);
+    contentVerticalSplitPane.setOneTouchExpandable(false);
 
-  private JSplitPane initContentPane() {
-    contentPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-    contentPane.setLeftComponent(initWorkspaceContainer());
-    contentPane.setRightComponent(initBottomToolBar());
-    contentPane.setResizeWeight(1.0);
+    JPanel contentPane = new JPanel(new BorderLayout());
+    contentPane.add(initBottomToolBar(), BorderLayout.SOUTH);
+    contentPane.add(contentVerticalSplitPane, BorderLayout.CENTER);
+
     return contentPane;
   }
 
-  private JPanel initBottomToolBar() {
-    JScrollPane bottomToolBarScollPane = new JScrollPane();
-    bottomToolBarScollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, Color.GRAY));
-
-    bottomToolBar = new JTabbedPane(SwingConstants.TOP);
-    bottomToolBar.setTabLayoutPolicy(JTabbedPane.WRAP_TAB_LAYOUT);
-
-    bottomToolBarScollPane.setViewportView(bottomToolBar);
-
-    JPanel bottomToolBarPane = new JPanel(new GridLayout(1, 1));
-    bottomToolBarPane.add(bottomToolBarScollPane);
-    return bottomToolBarPane;
+  private JComponent initBottomToolBar() {
+    bottomToolBar = new BottomToolBar(contentVerticalSplitPane, bottomToolBarItemContenPanel);
+    return bottomToolBar;
   }
 
   private void setLogoIcon() {

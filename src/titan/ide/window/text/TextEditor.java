@@ -97,17 +97,21 @@ public class TextEditor {
     panel.setBackground(tree.getBackground());
 
     GridBagConstraints gbc = new GridBagConstraints();
-    gbc.fill = GridBagConstraints.BOTH;
-    gbc.weightx = 1.0;
     gbc.gridx = 0;
     gbc.gridy = 0;
+    gbc.weightx = 1.0;
+    gbc.fill = GridBagConstraints.HORIZONTAL;
     panel.add(tree, gbc);
+
+    JPanel emptySpaceFill = new JPanel();
+    emptySpaceFill.setOpaque(false);
     gbc.gridx = 0;
     gbc.gridy = 1;
+    gbc.weightx = 1.0;
     gbc.weighty = 1.0;
-    JLabel blankSpaceFillComponent = new JLabel(" ");
-    blankSpaceFillComponent.setBackground(tree.getBackground());
-    panel.add(blankSpaceFillComponent, gbc);
+    gbc.fill = GridBagConstraints.BOTH;
+    panel.add(emptySpaceFill, gbc);
+
     projectPane.setViewportView(panel);
   }
 
@@ -177,13 +181,13 @@ public class TextEditor {
 
   private int getIndexOfOpenedFile(File file) {
     int indexOfFile = -1;
-    int index = 0;
+    int indexOfOpenedFiles = 0;
     for (File f : openedFiles) {
       if (f.equals(file)) {
-        indexOfFile = index;
+        indexOfFile = indexOfOpenedFiles;
         break;
       }
-      ++index;
+      ++indexOfOpenedFiles;
     }
     return indexOfFile;
   }
