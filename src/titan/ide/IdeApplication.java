@@ -28,7 +28,7 @@ public class IdeApplication {
               throw new IdeRuntimeException(e);
             }
             MainWindow mainWindow = new MainWindow("titan-ide");
-            ideContext.mainWindow = mainWindow;
+            ideContext.uiContext.mainWindow = mainWindow;
             mainWindow.open();
           }
         });

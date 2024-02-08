@@ -14,6 +14,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.Keymap;
 import javax.swing.text.SimpleAttributeSet;
+import titan.ide.config.IdeConfig;
+import titan.ide.context.IdeContext;
 import titan.ide.exception.IdeRuntimeException;
 
 /**
@@ -27,7 +29,8 @@ public class JTextPaneWrapper extends JTextPane {
   public JTextPaneWrapper(TextEditor textEditor, File file) {
     super();
     this.file = file;
-    setFont(new Font(null, Font.PLAIN, 20));
+    IdeConfig ideConfig = IdeContext.get().ideConfig;
+    setFont(new Font(ideConfig.fontNameOfTextEditor, Font.PLAIN, ideConfig.fontSizeOfTextEditor));
     setBackground(new Color(0xC7EDCC));
 
     setBorder(new LineNumberBorder());

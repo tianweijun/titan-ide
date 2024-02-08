@@ -160,8 +160,8 @@ public class TextEditor {
     closingBtn.addActionListener(new ClosingTitleTabActionListener(this, file));
 
     JPanel panel = new JPanel();
-    panel.setBorder(BorderFactory.createEmptyBorder()); // 取消边框
-    panel.setOpaque(false); // 取消内边距
+    panel.setBorder(BorderFactory.createEmptyBorder());
+    panel.setOpaque(false);
 
     panel.add(new JLabel(tabName));
     panel.add(closingBtn);

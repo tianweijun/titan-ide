@@ -4,30 +4,22 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.net.URL;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import titan.ide.services.MainWindowService;
-import titan.ide.window.mennu.MenuActionListener;
+import titan.ide.window.mennu.MainWindowMenuBar;
+import titan.ide.window.statusbar.StatusBar;
 import titan.ide.window.text.TextEditor;
 import titan.ide.window.toolbar.bottom.BottomToolBar;
-import titan.ide.window.toolbar.bottom.BottomToolBar.BottomToolBarItemType;
+import titan.ide.window.toolbar.top.TopToolBar;
 
 /**
  * .
@@ -39,10 +31,8 @@ public class MainWindowViewManager {
 
   public MainWindow mainWindow;
 
-  public JMenuBar menuBar;
+  public MainWindowMenuBar menuBar;
   public JPanel topToolBar;
-  public JPanel jpanelInTopToolBarLeft;
-  public JPanel jpanelInTopToolBarRight;
   public JSplitPane contentVerticalSplitPane;
   public JSplitPane workspacePane;
   public JPanel bottomToolBarItemContenPanel;
@@ -50,10 +40,6 @@ public class MainWindowViewManager {
   public TextEditor textEditor;
   public BottomToolBar bottomToolBar;
   public JPanel statusBar;
-  public JPanel jpanelInStatusBarLeft;
-  public JPanel jpanelInStatusBarRight;
-
-  MenuActionListener menuActionListener;
 
   public MainWindowViewManager(MainWindow mainWindow) {
     this.mainWindow = mainWindow;
@@ -78,87 +64,30 @@ public class MainWindowViewManager {
 
     setLogoIcon();
 
-    mainWindow.setJMenuBar(this.initMenu());
+    setMenu();
 
     mainWindow.add(initTopToolBar(), BorderLayout.NORTH);
     mainWindow.add(initStatusBar(), BorderLayout.SOUTH);
-    mainWindow.add(initContentPane(), BorderLayout.CENTER);
+    mainWindow.add(initCenterPane(), BorderLayout.CENTER);
+  }
+
+  private void setMenu() {
+    menuBar = new MainWindowMenuBar(mainWindow);
   }
 
   private JPanel initStatusBar() {
-    statusBar = new JPanel(new BorderLayout());
-    statusBar.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
-    jpanelInStatusBarLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    jpanelInStatusBarRight = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-    statusBar.add(jpanelInStatusBarLeft, BorderLayout.WEST);
-    statusBar.add(jpanelInStatusBarRight, BorderLayout.EAST);
-
-    addMsgToLeftStatusBar("All files are up-to-date (moments ago)");
-    addMsgToRightStatusBar("UTF-8");
+    statusBar = new StatusBar();
     return statusBar;
   }
 
-  private void addMsgToRightStatusBar(String msg) {
-    JLabel msgLabel = new JLabel(msg);
-    msgLabel.setForeground(Color.BLUE);
-    jpanelInStatusBarRight.add(msgLabel);
-  }
-
-  private void addMsgToLeftStatusBar(String msg) {
-    JLabel msgLabel = new JLabel(msg);
-    jpanelInStatusBarLeft.add(msgLabel);
-  }
-
   private JPanel initTopToolBar() {
-    topToolBar = new JPanel(new BorderLayout());
-    topToolBar.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.GRAY));
-    jpanelInTopToolBarLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
-    jpanelInTopToolBarRight = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-    topToolBar.add(jpanelInTopToolBarLeft, BorderLayout.WEST);
-    topToolBar.add(jpanelInTopToolBarRight, BorderLayout.EAST);
-
-    addRunBtnInTopToolBar();
-    addDebugBtnInTopToolBar();
-
+    topToolBar = new TopToolBar(bottomToolBar);
     return topToolBar;
   }
 
-  private void addDebugBtnInTopToolBar() {
-    URL debugBtnImgResource = this.getClass().getResource("/img/debug.png");
-    ImageIcon debugBtnIcon = new ImageIcon(debugBtnImgResource);
-    JButton debugBtn = new JButton(debugBtnIcon);
-    debugBtn.setBorderPainted(false);
-    debugBtn.setContentAreaFilled(true);
-    debugBtn.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            bottomToolBar.openBarItem(BottomToolBarItemType.DEBUG);
-          }
-        });
-    jpanelInTopToolBarRight.add(debugBtn);
-  }
-
-  private void addRunBtnInTopToolBar() {
-    URL runBtnImgResource = this.getClass().getResource("/img/run.png");
-    ImageIcon runBtnIcon = new ImageIcon(runBtnImgResource);
-    JButton runBtn = new JButton(runBtnIcon);
-    runBtn.setBorderPainted(false);
-    runBtn.setContentAreaFilled(true);
-    runBtn.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            bottomToolBar.openBarItem(BottomToolBarItemType.RUN);
-          }
-        });
-    jpanelInTopToolBarRight.add(runBtn);
-  }
-
-  private JPanel initContentPane() {
+  private JPanel initCenterPane() {
     bottomToolBarItemContenPanel = new JPanel();
     bottomToolBarItemContenPanel.setOpaque(false);
-    // bottomToolBarItemContenPanel.setBackground(Color.green);
 
     contentVerticalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
     contentVerticalSplitPane.setTopComponent(initWorkspaceContainer());
@@ -167,11 +96,11 @@ public class MainWindowViewManager {
     contentVerticalSplitPane.setDividerSize(0);
     contentVerticalSplitPane.setOneTouchExpandable(false);
 
-    JPanel contentPane = new JPanel(new BorderLayout());
-    contentPane.add(initBottomToolBar(), BorderLayout.SOUTH);
-    contentPane.add(contentVerticalSplitPane, BorderLayout.CENTER);
+    JPanel centerPanel = new JPanel(new BorderLayout());
+    centerPanel.add(initBottomToolBar(), BorderLayout.SOUTH);
+    centerPanel.add(contentVerticalSplitPane, BorderLayout.CENTER);
 
-    return contentPane;
+    return centerPanel;
   }
 
   private JComponent initBottomToolBar() {
@@ -183,40 +112,6 @@ public class MainWindowViewManager {
     URL resource = this.getClass().getResource("/img/titan-logo.png");
     ImageIcon logoImageIcon = new ImageIcon(resource);
     mainWindow.setIconImage(logoImageIcon.getImage());
-  }
-
-  private JMenuBar initMenu() {
-    menuActionListener = new MenuActionListener();
-    menuBar = new JMenuBar();
-    this.initFileMenu();
-    return menuBar;
-  }
-
-  private void initFileMenu() {
-    // File菜单
-    JMenu fileMenu = new JMenu("<html><u>F</u>ile</html>");
-    fileMenu.setMnemonic(KeyEvent.VK_F);
-    menuBar.add(fileMenu);
-
-    // new菜单项
-    JMenu newMenu = new JMenu("new");
-    newMenu.setIconTextGap(20);
-    fileMenu.add(newMenu);
-
-    // new Project菜单项
-    JMenuItem newProjectMenuItem = new JMenuItem("project");
-    newProjectMenuItem.setActionCommand("NewProjectMenuItem");
-    newProjectMenuItem.addActionListener(menuActionListener);
-    newProjectMenuItem.setIconTextGap(20);
-    newMenu.add(newProjectMenuItem);
-
-    // open 菜单项
-    JMenuItem openMenuItem = new JMenuItem("<html><u>O</u>pen...</html>");
-    openMenuItem.setMnemonic(KeyEvent.VK_O);
-    openMenuItem.setActionCommand("OpenMenuItem");
-    openMenuItem.addActionListener(menuActionListener);
-    openMenuItem.setIconTextGap(20);
-    fileMenu.add(openMenuItem);
   }
 
   private JSplitPane initWorkspaceContainer() {

@@ -57,9 +57,9 @@ public class BottomToolBar extends JPanel {
       contentVerticalSplitPane.setDividerSize(0);
       contentVerticalSplitPane.remove(bottomComponent);
 
-      Container contentPane = contentVerticalSplitPane.getParent();
-      contentPane.revalidate();
-      contentPane.repaint();
+      Container centerPane = contentVerticalSplitPane.getParent();
+      centerPane.revalidate();
+      centerPane.repaint();
     }
   }
 
@@ -96,9 +96,9 @@ public class BottomToolBar extends JPanel {
     // set activated
     activated(barItem);
 
-    Container contentPane = contentVerticalSplitPane.getParent();
-    contentPane.revalidate();
-    contentPane.repaint();
+    Container centerPane = contentVerticalSplitPane.getParent();
+    centerPane.revalidate();
+    centerPane.repaint();
 
     openedBarItem = barItem;
   }

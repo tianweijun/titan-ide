@@ -27,7 +27,7 @@ public class OpenMenuItemListener implements ActionListener {
     jFileChooser.setCurrentDirectory(getLastOpenedFileDirectory());
     // 文件选择对话框
     IdeContext ideContext = IdeContext.get();
-    MainWindow mainWindow = ideContext.mainWindow;
+    MainWindow mainWindow = ideContext.uiContext.mainWindow;
     int clickBtn = jFileChooser.showOpenDialog(mainWindow);
     if (clickBtn == JFileChooser.APPROVE_OPTION) {
       // 说明选中了某个文件，点击了打开按钮

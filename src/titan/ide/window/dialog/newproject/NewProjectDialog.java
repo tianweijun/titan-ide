@@ -1,4 +1,4 @@
-package titan.ide.window.dialog;
+package titan.ide.window.dialog.newproject;
 
 import java.awt.BorderLayout;
 import java.awt.Component;

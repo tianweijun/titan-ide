@@ -5,7 +5,7 @@ import titan.ide.config.IdeConfigBuilder;
 import titan.ide.config.ProjectIdeConfig;
 import titan.ide.config.RootIdeConfig;
 import titan.ide.config.RootIdeConfigBuilder;
-import titan.ide.window.MainWindow;
+import titan.ide.context.ui.UiContext;
 import titan.json.Json;
 
 /**
@@ -23,7 +23,7 @@ public class IdeContext {
 
   public IdeConfig ideConfig;
 
-  public MainWindow mainWindow;
+  public UiContext uiContext;
 
   public static void set(IdeContext ctx) {
     contextThreadLocal.set(ctx);
@@ -42,6 +42,7 @@ public class IdeContext {
     IdeContext ideContext = new IdeContext();
     ideContext.rootIdeConfig = new RootIdeConfigBuilder().build();
     ideContext.ideConfig = new IdeConfigBuilder().build(ideContext.rootIdeConfig);
+    ideContext.uiContext = new UiContext();
     set(ideContext);
     return ideContext;
   }
