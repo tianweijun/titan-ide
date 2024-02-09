@@ -66,9 +66,10 @@ public class MainWindowViewManager {
 
     setMenu();
 
+    mainWindow.add(initCenterPane(), BorderLayout.CENTER);
+    // initCenterPane()在initTopToolBar()之前，因为TopToolBar依赖CenterPane中的bottomToolBar.
     mainWindow.add(initTopToolBar(), BorderLayout.NORTH);
     mainWindow.add(initStatusBar(), BorderLayout.SOUTH);
-    mainWindow.add(initCenterPane(), BorderLayout.CENTER);
   }
 
   private void setMenu() {

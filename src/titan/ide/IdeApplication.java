@@ -29,7 +29,7 @@ public class IdeApplication {
             }
             MainWindow mainWindow = new MainWindow("titan-ide");
             ideContext.uiContext.mainWindow = mainWindow;
-            mainWindow.open();
+            mainWindow.openProject();
           }
         });
   }

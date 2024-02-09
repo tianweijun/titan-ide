@@ -24,6 +24,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
+import titan.ide.context.IdeContext;
 import titan.ide.util.FileUtil;
 
 /**
@@ -149,7 +150,8 @@ public class TextEditor {
 
     SimpleAttributeSet attributeSet = new SimpleAttributeSet();
     // StyleConstants.setBold(attributeSet, true);
-    jTextPane.insertString(FileUtil.getString(file), attributeSet);
+    jTextPane.insertString(
+        FileUtil.getString(file, IdeContext.get().getFileEncoding()), attributeSet);
   }
 
   private JPanel getClosingTitleTab(String tabName, File file) {
@@ -176,7 +178,7 @@ public class TextEditor {
     JScrollPane jScrollPane = (JScrollPane) textEditorTabbedPane.getComponentAt(indexOfTabbedPane);
     JTextPaneWrapper jTextPane = (JTextPaneWrapper) jScrollPane.getViewport().getView();
     String text = jTextPane.getText();
-    FileUtil.write(openedFiles.get(indexOfTabbedPane), text);
+    FileUtil.write(openedFiles.get(indexOfTabbedPane), text, IdeContext.get().getFileEncoding());
   }
 
   private int getIndexOfOpenedFile(File file) {

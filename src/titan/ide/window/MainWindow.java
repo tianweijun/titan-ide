@@ -20,16 +20,16 @@ public class MainWindow extends AbstractWindow {
     viewManager.init();
   }
 
-  public void open() {
+  public void openProject() {
     IdeContext ideContext = IdeContext.get();
     String lastOpenedFileDirectory = ideContext.ideConfig.lastOpenedFileDirectory;
     if (StringUtils.isNotBlank(lastOpenedFileDirectory)) {
-      open(new File(lastOpenedFileDirectory));
+      openProject(new File(lastOpenedFileDirectory));
     }
     this.setVisible(true);
   }
 
-  public void open(File file) {
+  public void openProject(File file) {
     viewManager.open(file);
   }
 

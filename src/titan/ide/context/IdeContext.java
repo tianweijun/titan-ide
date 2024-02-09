@@ -3,9 +3,11 @@ package titan.ide.context;
 import titan.ide.config.IdeConfig;
 import titan.ide.config.IdeConfigBuilder;
 import titan.ide.config.ProjectIdeConfig;
+import titan.ide.config.ProjectIdeConfigBuilder;
 import titan.ide.config.RootIdeConfig;
 import titan.ide.config.RootIdeConfigBuilder;
 import titan.ide.context.ui.UiContext;
+import titan.ide.util.StringUtils;
 import titan.json.Json;
 
 /**
@@ -42,8 +44,17 @@ public class IdeContext {
     IdeContext ideContext = new IdeContext();
     ideContext.rootIdeConfig = new RootIdeConfigBuilder().build();
     ideContext.ideConfig = new IdeConfigBuilder().build(ideContext.rootIdeConfig);
+    ideContext.projectIdeConfig = new ProjectIdeConfigBuilder().build();
     ideContext.uiContext = new UiContext();
     set(ideContext);
     return ideContext;
+  }
+
+  public String getFileEncoding() {
+    String fileEncoding = projectIdeConfig.fileEncoding;
+    if (StringUtils.isBlank(fileEncoding)) {
+      fileEncoding = ideConfig.fileEncoding;
+    }
+    return fileEncoding;
   }
 }

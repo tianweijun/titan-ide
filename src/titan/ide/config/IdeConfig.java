@@ -9,9 +9,11 @@ import titan.ide.util.StringUtils;
  * @author tian wei jun
  */
 public class IdeConfig {
+  public static final String JSON_ENCODING = "UTF-8";
   public String lastOpenedFileDirectory;
   public String fontNameOfTextEditor = new Font(null).getFontName();
   public int fontSizeOfTextEditor = 24;
+  public String fileEncoding = "UTF-8";
 
   public void beOverrode(IdeConfig ideConfigInFile) {
     if (StringUtils.isNotBlank(ideConfigInFile.lastOpenedFileDirectory)) {

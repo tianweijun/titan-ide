@@ -8,6 +8,6 @@ package titan.ide.config;
 public class ProjectIdeConfigBuilder {
 
   public ProjectIdeConfig build() {
-    return null;
+    return new ProjectIdeConfig();
   }
 }

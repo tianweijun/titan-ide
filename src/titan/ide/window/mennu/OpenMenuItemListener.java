@@ -35,7 +35,7 @@ public class OpenMenuItemListener implements ActionListener {
       // 记录到最近打开的文件
       recordLastOpenedFileDirectory(selectedFile);
       // 打开文件或项目
-      mainWindow.open(selectedFile);
+      mainWindow.openProject(selectedFile);
     }
   }
 

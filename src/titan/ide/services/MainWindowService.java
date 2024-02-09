@@ -31,6 +31,6 @@ public class MainWindowService {
     IdeConfig ideConfig = ideContext.ideConfig;
     String ideConfigStrJson = Json.toPrettyJson(ideConfig);
     File persistentIdeConfigFile = FileUtil.makeFile(persistentIdeConfigFilePath);
-    FileUtil.write(persistentIdeConfigFile, ideConfigStrJson);
+    FileUtil.write(persistentIdeConfigFile, ideConfigStrJson, ideContext.getFileEncoding());
   }
 }

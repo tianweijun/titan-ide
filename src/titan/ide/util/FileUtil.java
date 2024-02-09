@@ -2,9 +2,9 @@ package titan.ide.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import titan.ide.exception.IdeRuntimeException;
 
 /**
@@ -39,26 +39,42 @@ public class FileUtil {
     return file;
   }
 
-  public static String getString(File file) {
-    String str = "";
-    try (FileInputStream inputStream = new FileInputStream(file)) {
-      int length = inputStream.available();
-      byte[] bytes = new byte[length];
-      int read = inputStream.read(bytes);
-      if (read > 0) {
-        str = new String(bytes, StandardCharsets.UTF_8);
-      }
-    } catch (IOException e) {
-      throw new IdeRuntimeException(e);
-    }
-    return str;
-  }
-
   public static void write(File file, String text) {
     try (FileWriter fileWriter = new FileWriter(file)) {
       fileWriter.write(text);
     } catch (IOException e) {
       throw new IdeRuntimeException(e);
     }
+  }
+
+  public static void write(File file, String text, String fileEncoding) {
+    try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+      fileOutputStream.write(text.getBytes(fileEncoding));
+    } catch (IOException e) {
+      throw new IdeRuntimeException(e);
+    }
+  }
+
+  public static String getString(File file) {
+    return getString(file, null);
+  }
+
+  public static String getString(File file, String fileEncoding) {
+    String str = "";
+    try (FileInputStream inputStream = new FileInputStream(file)) {
+      int length = inputStream.available();
+      byte[] bytes = new byte[length];
+      int read = inputStream.read(bytes);
+      if (read > 0) {
+        if (StringUtils.isNotBlank(fileEncoding)) {
+          str = new String(bytes, fileEncoding);
+        } else {
+          str = new String(bytes);
+        }
+      }
+    } catch (IOException e) {
+      throw new IdeRuntimeException(e);
+    }
+    return str;
   }
 }
