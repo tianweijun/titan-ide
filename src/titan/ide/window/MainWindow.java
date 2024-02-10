@@ -30,6 +30,7 @@ public class MainWindow extends AbstractWindow {
   }
 
   public void openProject(File file) {
+    viewManager.updateProjectContext(file);
     viewManager.open(file);
   }
 

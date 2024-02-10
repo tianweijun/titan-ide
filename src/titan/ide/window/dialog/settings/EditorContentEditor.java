@@ -46,12 +46,12 @@ public class EditorContentEditor extends ContentEditor {
     gbc.gridy = indexOfItems++;
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    add(addHyperlink(), gbc);
+    add(addHyperlinkPane(), gbc);
 
     addEmptySpaceFill(gbc, indexOfItems++);
   }
 
-  private Component addHyperlink() {
+  private Component addHyperlinkPane() {
     JPanel jPanel = new JPanel(new GridBagLayout());
     jPanel.setBorder(BorderFactory.createEmptyBorder(15, 0, 0, 0));
 
@@ -59,13 +59,20 @@ public class EditorContentEditor extends ContentEditor {
     int indexOfItems = 0;
 
     gbc.gridx = 0;
-    gbc.gridy = indexOfItems++;
+    gbc.gridy = 0;
     gbc.weightx = 1.0;
     gbc.fill = GridBagConstraints.HORIZONTAL;
-    gbc.insets = new Insets(5, 15, 5, 5);
-    jPanel.add(getHyperlink("Font"), gbc);
+    gbc.insets = new Insets(3, 15, 3, 5);
+
+    addHyperlink(jPanel, "Font", gbc, indexOfItems++);
+    addHyperlink(jPanel, "File Encodings", gbc, indexOfItems++);
 
     return jPanel;
+  }
+
+  private void addHyperlink(JPanel jPanel, String link, GridBagConstraints gbc, int gridy) {
+    gbc.gridy = gridy;
+    jPanel.add(getHyperlink(link), gbc);
   }
 
   private Component getHyperlink(String link) {

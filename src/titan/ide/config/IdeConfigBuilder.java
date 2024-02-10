@@ -26,7 +26,7 @@ public class IdeConfigBuilder {
   private IdeConfig build() {
     InputStream jsonIdeConfigInputStream =
         this.getClass().getClassLoader().getResourceAsStream("config/defaultIdeConfig.json");
-    return Json.fromJson(jsonIdeConfigInputStream, IdeConfig.class, IdeConfig.JSON_ENCODING);
+    return Json.fromJson(jsonIdeConfigInputStream, IdeConfig.class, JsonConfig.JSON_ENCODING);
   }
 
   private IdeConfig buildByFilePath(String ideConfigFilePath) {
@@ -35,7 +35,8 @@ public class IdeConfigBuilder {
     if (cfgFile.exists() && cfgFile.isFile()) {
       try (FileInputStream ideConfigInFileJsonInputStream = new FileInputStream(cfgFile)) {
         IdeConfig ideConfigInFile =
-            Json.fromJson(ideConfigInFileJsonInputStream, IdeConfig.class, IdeConfig.JSON_ENCODING);
+            Json.fromJson(
+                ideConfigInFileJsonInputStream, IdeConfig.class, JsonConfig.JSON_ENCODING);
         ideConfig.beOverrode(ideConfigInFile);
       } catch (IOException e) {
         throw new IdeRuntimeException(e);

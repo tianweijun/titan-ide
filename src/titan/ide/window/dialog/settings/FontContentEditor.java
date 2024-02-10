@@ -18,7 +18,6 @@ import javax.swing.JTextField;
 import titan.ide.config.IdeConfig;
 import titan.ide.context.IdeContext;
 import titan.ide.context.ui.SettingsChangeAction;
-import titan.ide.context.ui.SettingsChangeAction.SettingsChangeActionType;
 import titan.ide.context.ui.UiContext;
 
 /**
@@ -140,9 +139,9 @@ public class FontContentEditor extends ContentEditor {
             && fontSize == ideConfig.fontSizeOfTextEditor;
     if (!isNotChange) {
       UiContext uiContext = ideContext.uiContext;
-      uiContext.addSettingsChangeActions(
-          new FontSettingsChangeAction(SettingsChangeActionType.FONT_SETTINGS, fontName, fontSize));
+      uiContext.addSettingsChangeActions(new FontSettingsChangeAction(fontName, fontSize));
       uiContext.applyBtn.setEnabled(true);
+      uiContext.applyBtn.requestFocus();
     }
   }
 
@@ -150,9 +149,8 @@ public class FontContentEditor extends ContentEditor {
     String fontName;
     int fontSize;
 
-    public FontSettingsChangeAction(
-        SettingsChangeActionType actionType, String fontName, int fontSize) {
-      super(actionType);
+    public FontSettingsChangeAction(String fontName, int fontSize) {
+      super(SettingsChangeActionType.FONT_SETTINGS);
       this.fontName = fontName;
       this.fontSize = fontSize;
     }
@@ -164,6 +162,8 @@ public class FontContentEditor extends ContentEditor {
 
       ideConfig.fontNameOfTextEditor = fontName;
       ideConfig.fontSizeOfTextEditor = fontSize;
+
+      ideContext.uiContext.mainWindow.viewManager.textEditor.reloadTextPanes();
     }
   }
 }

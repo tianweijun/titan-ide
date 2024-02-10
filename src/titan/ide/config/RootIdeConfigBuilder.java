@@ -13,7 +13,8 @@ public class RootIdeConfigBuilder {
   public RootIdeConfig build() {
     InputStream jsonIdeConfigInputStream =
         this.getClass().getClassLoader().getResourceAsStream("config/rootIdeConfig.json");
-    RootIdeConfig rootIdeConfig = Json.fromJson(jsonIdeConfigInputStream, RootIdeConfig.class);
+    RootIdeConfig rootIdeConfig =
+        Json.fromJson(jsonIdeConfigInputStream, RootIdeConfig.class, JsonConfig.JSON_ENCODING);
     return rootIdeConfig;
   }
 }

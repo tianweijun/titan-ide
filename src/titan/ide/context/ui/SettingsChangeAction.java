@@ -34,6 +34,7 @@ public abstract class SettingsChangeAction {
   }
 
   public static enum SettingsChangeActionType {
-    FONT_SETTINGS
+    FONT_SETTINGS,
+    FILE_ENCODINGS_SETTINGS;
   }
 }

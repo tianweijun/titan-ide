@@ -144,4 +144,8 @@ public class MainWindowViewManager {
   public void actionOnWindowClosing() {
     textEditor.actionOnWindowClosing();
   }
+
+  public void updateProjectContext(File file) {
+    mainWindowService.updateProjectContext(file);
+  }
 }

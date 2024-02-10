@@ -1,5 +1,6 @@
 package titan.ide.context;
 
+import java.io.File;
 import titan.ide.config.IdeConfig;
 import titan.ide.config.IdeConfigBuilder;
 import titan.ide.config.ProjectIdeConfig;
@@ -26,6 +27,9 @@ public class IdeContext {
   public IdeConfig ideConfig;
 
   public UiContext uiContext;
+
+  public File projectFileDirectory = null;
+  public File projectIdeConfigFile = null;
 
   public static void set(IdeContext ctx) {
     contextThreadLocal.set(ctx);
@@ -56,5 +60,13 @@ public class IdeContext {
       fileEncoding = ideConfig.fileEncoding;
     }
     return fileEncoding;
+  }
+
+  public String getIdeConfigFilePath() {
+    String ideConfigFilePath = rootIdeConfig.ideConfigFilePath;
+    if (StringUtils.isBlank(ideConfigFilePath)) {
+      ideConfigFilePath = rootIdeConfig.getDefaultIdeConfigFilePath();
+    }
+    return ideConfigFilePath;
   }
 }

@@ -20,7 +20,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
-import javax.swing.text.SimpleAttributeSet;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
@@ -148,10 +147,7 @@ public class TextEditor {
     openedFiles.add(file);
     textEditorTabbedPane.setSelectedIndex(indexInTabbedPane);
 
-    SimpleAttributeSet attributeSet = new SimpleAttributeSet();
-    // StyleConstants.setBold(attributeSet, true);
-    jTextPane.insertString(
-        FileUtil.getString(file, IdeContext.get().getFileEncoding()), attributeSet);
+    jTextPane.setText(FileUtil.getString(file, IdeContext.get().getFileEncoding()));
   }
 
   private JPanel getClosingTitleTab(String tabName, File file) {
@@ -205,6 +201,17 @@ public class TextEditor {
     textEditorTabbedPane.getComponentAt(indexInTabbedPane);
     textEditorTabbedPane.remove(indexInTabbedPane);
     openedFiles.remove(indexInTabbedPane);
+  }
+
+  public void reloadTextPanes() {
+    for (int indexOfComponents = 0;
+        indexOfComponents < textEditorTabbedPane.getTabCount();
+        indexOfComponents++) {
+      JScrollPane jScrollPane =
+          (JScrollPane) textEditorTabbedPane.getComponentAt(indexOfComponents);
+      JTextPaneWrapper jTextPane = (JTextPaneWrapper) jScrollPane.getViewport().getView();
+      jTextPane.reload();
+    }
   }
 
   static class ClosingTitleTabActionListener implements ActionListener {

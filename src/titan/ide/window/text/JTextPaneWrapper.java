@@ -29,11 +29,11 @@ public class JTextPaneWrapper extends JTextPane {
   public JTextPaneWrapper(TextEditor textEditor, File file) {
     super();
     this.file = file;
-    IdeConfig ideConfig = IdeContext.get().ideConfig;
-    setFont(new Font(ideConfig.fontNameOfTextEditor, Font.PLAIN, ideConfig.fontSizeOfTextEditor));
-    setBackground(new Color(0xC7EDCC));
 
+    setBackground(new Color(0xC7EDCC));
     setBorder(new LineNumberBorder());
+
+    initByContext();
 
     addMouseListener(
         new MouseAdapter() {
@@ -55,6 +55,11 @@ public class JTextPaneWrapper extends JTextPane {
         });
   }
 
+  private void initByContext() {
+    IdeConfig ideConfig = IdeContext.get().ideConfig;
+    setFont(new Font(ideConfig.fontNameOfTextEditor, Font.PLAIN, ideConfig.fontSizeOfTextEditor));
+  }
+
   public void insertString(String text, SimpleAttributeSet attributeSet) {
     Document document = getDocument();
     try {
@@ -62,5 +67,10 @@ public class JTextPaneWrapper extends JTextPane {
     } catch (BadLocationException e) {
       throw new IdeRuntimeException(e);
     }
+  }
+
+  public void reload() {
+    initByContext();
+    setText(getText());
   }
 }

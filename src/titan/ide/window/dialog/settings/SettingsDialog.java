@@ -93,6 +93,7 @@ public class SettingsDialog extends JDialog {
             for (SettingsChangeAction action : IdeContext.get().uiContext.settingsChangeActions) {
               action.doChangeAction();
             }
+            IdeContext.get().uiContext.settingsChangeActions.clear();
             self.dispose();
           }
         });
@@ -104,6 +105,7 @@ public class SettingsDialog extends JDialog {
               action.doChangeAction();
             }
             applyBtn.setEnabled(false);
+            IdeContext.get().uiContext.settingsChangeActions.clear();
           }
         });
     return btnsPanel;

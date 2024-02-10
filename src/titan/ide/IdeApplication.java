@@ -21,6 +21,7 @@ public class IdeApplication {
           @Override
           public void run() {
             IdeContext ideContext = IdeContext.init();
+            enableAntiAliasing();
             try {
               // 加载皮肤
               UIManager.setLookAndFeel(new FlatLightLaf());
@@ -32,6 +33,12 @@ public class IdeApplication {
             mainWindow.openProject();
           }
         });
+  }
+
+  // 全局字体抗锯齿，必须在初始化 JFrame 之前调用！
+  static void enableAntiAliasing() {
+    System.setProperty("awt.useSystemAAFontSettings", "on");
+    System.setProperty("swing.aatext", "true");
   }
 
   public static void main(String[] args) {

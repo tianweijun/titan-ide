@@ -111,6 +111,9 @@ public class TreeSettingItemContainer extends JScrollPane {
             new SettingTreeNodeUserObject("Editor", new EditorContentEditor()));
     editor.add(
         new DefaultMutableTreeNode(new SettingTreeNodeUserObject("Font", new FontContentEditor())));
+    editor.add(
+        new DefaultMutableTreeNode(
+            new SettingTreeNodeUserObject("File Encodings", new FileEncodingsContentEditor())));
     return editor;
   }
 }
