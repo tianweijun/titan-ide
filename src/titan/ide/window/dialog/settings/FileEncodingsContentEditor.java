@@ -111,11 +111,11 @@ public class FileEncodingsContentEditor extends ContentEditor {
 
   private LinkedHashSet<String> getEncodingNames() {
     LinkedList<String> defaultEncodingNames = new LinkedList<>();
-    defaultEncodingNames.add("");
     defaultEncodingNames.add("UTF-8");
     defaultEncodingNames.add("GBK");
     defaultEncodingNames.add("ISO-8859-1");
     defaultEncodingNames.add("UTF-16");
+    defaultEncodingNames.add("");
 
     IdeContext ideContext = IdeContext.get();
     if (StringUtils.isNotBlank(ideContext.ideConfig.fileEncoding)) {
